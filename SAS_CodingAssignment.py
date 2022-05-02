@@ -23,7 +23,7 @@ def getInput():
 def loadFile():
     fileLoaded = False
     while not fileLoaded:
-        filename = input("Enter the name of a file in you current working directory (ex: file.txt) or Q to quit: ")
+        filename = input("Enter the name of a file in you current working directory or Q to quit: ")
         try:
             file = open(filename, "rb")
             textInFile = file.read()
@@ -39,7 +39,7 @@ def loadFile():
 
 # saves text within a file of a name that is entered
 def saveFile(textInFile):
-    filename = input("What would you like to save the new file as? (ex: file.txt): ")
+    filename = input("What would you like to save the new file as?: ")
     file = open(filename, "wb")
     file.write(textInFile)
     file.close()
@@ -68,13 +68,13 @@ def decryptFile(f):
 
 # main method
 # ----------------------------------------------------------
-print("Welcome to the File Encryption CLI!")
-print("-----------------------------------")
+print("Welcome to Dane's File Encryption App")
+print("-------------------------------------")
 
-# get password and encode in bytes
-password = input("Please input your password: ").encode()
+# get passphrase and encode in bytes
+passphrase = input("Please input your passphrase: ").encode()
 
-# used hardcoded salt for example purposes
+# used hardcoded salt for example purposes, typically randomly generated and stored in database
 # salt = os.urandom(16) in order to generate randomly
 salt = b'\xdc\xe2L\xcf\x12\xceAbP\x88\xe1\xc1\xbb4\x05\x8f'
 
@@ -90,8 +90,8 @@ kdf = PBKDF2HMAC(
     iterations=390000,
 )
 
-# create key based on password input
-key = base64.urlsafe_b64encode(kdf.derive(password))
+# create key based on passphrase input and encode 64 bit for Fernet
+key = base64.urlsafe_b64encode(kdf.derive(passphrase))
 
 # create Fernet object using created key
 f = Fernet(key)
